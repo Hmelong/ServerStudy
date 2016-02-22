@@ -1,12 +1,16 @@
 #pragma once
 
 #include "util.h"
-#include "NetworkSession.h"
+#include "ServerSession.h"
+#include "NetworkEngine.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	NetworkSession networkSession;
-	if (networkSession.InitSession() == false)
+	if (NetworkEngine::Inst()->InitWSA() == false)
+		return -1;
+
+	ServerSession serverSession;
+	if (serverSession.InitSession() == false)
 		return -1;
 
 	SOCKET client_sock;
@@ -17,7 +21,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		int addrlen = sizeof(clientAddr);
 
-		client_sock = accept(networkSession.listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
+		client_sock = accept(serverSession.listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (client_sock == INVALID_SOCKET)
 		{
 			printf("[ERROR] accept()");
@@ -80,7 +84,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		closesocket(client_sock);
 	}
 
-	networkSession.CloseSession();
+	serverSession.CloseSession();
+
+	NetworkEngine::Inst()->ReleaseWSA();
 
 	return 0;
 }

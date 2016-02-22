@@ -1,23 +1,19 @@
 #pragma once
 
 #include "util.h"
-#include "NetworkSession.h"
+#include "ServerSession.h"
 
 
-NetworkSession::NetworkSession()
+ServerSession::ServerSession()
 {
 }
 
-NetworkSession::~NetworkSession()
+ServerSession::~ServerSession()
 {
 }
 
-bool NetworkSession::InitSession()
+bool ServerSession::InitSession()
 {
-	// WSA
-	if (InitWSA() == false)
-		return false;
-
 	// socket
 	if (InitSocket() == false)
 		return false;
@@ -33,28 +29,13 @@ bool NetworkSession::InitSession()
 	return true;
 }
 
-void NetworkSession::CloseSession()
+void ServerSession::CloseSession()
 {
 	// cloasesocket();
 	closesocket(listen_sock);
-
-	// 윈속 종료
-	WSACleanup();
 }
 
-bool NetworkSession::InitWSA()
-{
-	if (WSAStartup(MAKEWORD(2, 2), &WSA) != 0)
-	{
-		printf("[ERROR] Initalize WSASock");
-		return false;
-	}
-	printf("WSASock success.\n");
-	
-	return true;
-}
-
-bool NetworkSession::InitSocket()
+bool ServerSession::InitSocket()
 {
 	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET)
@@ -68,7 +49,7 @@ bool NetworkSession::InitSocket()
 	return true;
 }
 
-bool NetworkSession::Bind()
+bool ServerSession::Bind()
 {
 	SOCKADDR_IN serverAddr;
 	ZeroMemory(&serverAddr, sizeof(serverAddr));
@@ -88,7 +69,7 @@ bool NetworkSession::Bind()
 	return true;
 }
 
-bool NetworkSession::Listen()
+bool ServerSession::Listen()
 {
 	int retval = listen(listen_sock, SOMAXCONN);
 	if (retval == SOCKET_ERROR)

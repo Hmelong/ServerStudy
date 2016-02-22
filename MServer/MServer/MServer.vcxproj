@@ -80,11 +80,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NetworkSession.cpp" />
+    <ClCompile Include="NetworkEngine.cpp" />
+    <ClCompile Include="ServerSession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Shared\util.h" />
-    <ClInclude Include="NetworkSession.h" />
+    <ClInclude Include="NetworkEngine.h" />
+    <ClInclude Include="ServerSession.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

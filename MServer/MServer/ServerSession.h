@@ -1,10 +1,10 @@
 #pragma once
 
-class NetworkSession
+class ServerSession
 {
 public:
-	NetworkSession();
-	~NetworkSession();
+	ServerSession();
+	~ServerSession();
 
 	bool InitSession();
 
@@ -15,9 +15,6 @@ protected:
 	bool InitSocket();
 	bool Bind();
 	bool Listen();
-
-private:
-	WSADATA WSA;
 
 public:
 	SOCKET listen_sock;
