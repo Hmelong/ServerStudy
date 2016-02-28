@@ -20,6 +20,6 @@ public:
     int ReadBuffer();
 
     // body
-    string message;
+    std::string message;
 };
 

@@ -9,7 +9,7 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="SDKs">
+    <Filter Include="Shared">
       <UniqueIdentifier>{55c9f11c-c9de-41e4-af25-a511b4eda81c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -33,7 +33,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Shared\format.cc">
-      <Filter>SDKs</Filter>
+      <Filter>Shared</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,10 +56,16 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Shared\util.h">
-      <Filter>SDKs</Filter>
+      <Filter>Shared</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Shared\format.h">
-      <Filter>SDKs</Filter>
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\log.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\primitive_types.h">
+      <Filter>Shared</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

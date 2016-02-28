@@ -92,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Shared\format.h" />
+    <ClInclude Include="..\..\Shared\log.h" />
+    <ClInclude Include="..\..\Shared\primitive_types.h" />
     <ClInclude Include="..\..\Shared\util.h" />
     <ClInclude Include="NetworkEngine.h" />
     <ClInclude Include="PacketBuffer.h" />
