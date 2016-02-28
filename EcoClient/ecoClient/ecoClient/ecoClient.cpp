@@ -36,7 +36,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// 데이터 통신
-	char buf[BUFSIZE + 1] = { 0, };
+	char buf[MAX_BUF_SIZE + 1] = { 0, };
 
 	while (1)
 	{
@@ -44,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		ZeroMemory(buf, sizeof(buf));
 		printf("\n[보낼 데이터] ");
 		
-		if (NULL == fgets(buf, BUFSIZE, stdin))
+		if (NULL == fgets(buf, MAX_BUF_SIZE, stdin))
 		{
 			continue;
 		}
@@ -68,7 +68,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		CopyMemory(buf + lenWrite, &packet.no, sizeof(int));
 		lenWrite += sizeof(int);
 
-		char message[BUFSIZE + 1] = { 0, };
+		char message[MAX_BUF_SIZE + 1] = { 0, };
 		sprintf_s(message, packet.message.c_str(), packet.message.length());
 		CopyMemory(buf + lenWrite, &message, packet.message.length());
 		lenWrite += packet.message.length();
@@ -86,7 +86,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			// 데이터 받기
 			ZeroMemory(buf, sizeof(buf));
-			retval = recv(sock, buf, BUFSIZE, 0);
+			retval = recv(sock, buf, MAX_BUF_SIZE, 0);
 			if (SOCKET_ERROR == retval || retval == 0)
 			{
 				printf("[ERROR] resv() \n");
@@ -102,7 +102,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			CopyMemory(&packet.no, buf + lenRead, sizeof(int));
 			lenRead += sizeof(int);
 
-			char message[BUFSIZE + 1] = { 0, };
+			char message[MAX_BUF_SIZE + 1] = { 0, };
 			CopyMemory(&message, buf + lenRead, packetLength - lenRead);
 			packet.message = message;
 

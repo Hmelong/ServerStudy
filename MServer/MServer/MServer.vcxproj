@@ -81,12 +81,18 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkEngine.cpp" />
+    <ClCompile Include="PacketBuffer.cpp" />
+    <ClCompile Include="PacketHandler.cpp" />
     <ClCompile Include="ServerSession.cpp" />
+    <ClCompile Include="Session.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Shared\util.h" />
     <ClInclude Include="NetworkEngine.h" />
+    <ClInclude Include="PacketBuffer.h" />
+    <ClInclude Include="PacketHandler.h" />
     <ClInclude Include="ServerSession.h" />
+    <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

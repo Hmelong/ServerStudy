@@ -24,10 +24,14 @@ struct msg
 		short size = sizeof(int) + message.length();
 		return size;
 	}
-
-	void addPacket()
-	{
-		no++;
-		message += std::to_string(no);
-	}
 };
+
+
+enum PACKET_NO
+{
+	NO_0	= 0,
+	NO_1,
+
+	MAX_NO
+};
+

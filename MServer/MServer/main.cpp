@@ -15,7 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	SOCKET client_sock;
 	SOCKADDR_IN clientAddr;
-	char buf[BUFSIZE + 1] = { 0, };
+	char buf[MAX_BUF_SIZE + 1] = { 0, };
 
 	while (1)
 	{
@@ -35,7 +35,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		while (1)
 		{
 			// recv
-			int retval = recv(client_sock, buf, BUFSIZE, 0);
+			int retval = recv(client_sock, buf, MAX_BUF_SIZE, 0);
 			if (SOCKET_ERROR == retval || 0 == retval)
 				break;
 
@@ -52,12 +52,14 @@ int _tmain(int argc, _TCHAR* argv[])
 			CopyMemory(&packet.no, buf + len, sizeof(int));
 			len += sizeof(int);
 
-			char message[BUFSIZE + 1] = { 0, };
+			char message[MAX_BUF_SIZE + 1] = { 0, };
 			CopyMemory(&message, buf + len, packetLength - len);
 			packet.message = message;
 
 			// ++
-			packet.addPacket();
+			packet.no++;
+			packet.message += std::to_string(packet.no);
+			
 
 
 			// send
