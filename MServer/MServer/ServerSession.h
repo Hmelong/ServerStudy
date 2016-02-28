@@ -3,20 +3,18 @@
 class ServerSession
 {
 public:
-	ServerSession();
-	~ServerSession();
+    ServerSession();
+    ~ServerSession();
 
-	bool InitSession();
-
-	void CloseSession();
+    bool InitSession();
+    void CloseSession();
 
 protected:
-	bool InitWSA();
-	bool InitSocket();
-	bool Bind();
-	bool Listen();
+    bool InitWSA();
+    bool InitSocket();
+    bool Bind();
+    bool Listen();
 
 public:
-	SOCKET listen_sock;
+    SOCKET listen_sock;
 };
-

@@ -5,12 +5,11 @@
 class NetworkEngine : public Singleton<NetworkEngine>
 {
 public:
-	~NetworkEngine();
+    ~NetworkEngine();
 
-	bool InitWSA();
-	void ReleaseWSA();
+    bool InitWSA();
+    void ReleaseWSA();
 
 private:
-	WSADATA WSA;
+    WSADATA WSA;
 };
-

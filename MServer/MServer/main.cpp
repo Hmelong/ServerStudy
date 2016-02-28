@@ -6,89 +6,87 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	if (NetworkEngine::Inst()->InitWSA() == false)
-		return -1;
+    if (NetworkEngine::Inst()->InitWSA() == false)
+        return -1;
 
-	ServerSession serverSession;
-	if (serverSession.InitSession() == false)
-		return -1;
+    ServerSession serverSession;
+    if (serverSession.InitSession() == false)
+        return -1;
 
-	SOCKET client_sock;
-	SOCKADDR_IN clientAddr;
-	char buf[MAX_BUF_SIZE + 1] = { 0, };
+    SOCKET client_sock;
+    SOCKADDR_IN clientAddr;
+    char buf[MAX_BUF_SIZE + 1] = { 0, };
 
-	while (1)
-	{
-		int addrlen = sizeof(clientAddr);
+    while (1)
+    {
+        int addrlen = sizeof(clientAddr);
 
-		client_sock = accept(serverSession.listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
-		if (client_sock == INVALID_SOCKET)
-		{
-			printf("[ERROR] accept()");
-			continue;
-		}
+        client_sock = accept(serverSession.listen_sock, (SOCKADDR*)&clientAddr, &addrlen);
+        if (client_sock == INVALID_SOCKET)
+        {
+            LOG_ERROR("accept()");
+            continue;
+        }
 
-		printf("client_sock success.\n");
+        LOG_INFO("client_sock success.");
 
+        // 데이터 통신
+        while (1)
+        {
+            // recv
+            int retval = recv(client_sock, buf, MAX_BUF_SIZE, 0);
+            if (SOCKET_ERROR == retval || 0 == retval)
+                break;
 
-		// 데이터 통신
-		while (1)
-		{
-			// recv
-			int retval = recv(client_sock, buf, MAX_BUF_SIZE, 0);
-			if (SOCKET_ERROR == retval || 0 == retval)
-				break;
+            // 버퍼 읽기
+            int packetLength = 0;
+            CopyMemory(&packetLength, buf, sizeof(short));
+            
+            // 이 이상 큰 패킷은 읽지 않는다
+            if (packetLength > MAX_BUF_SIZE || packetLength <= 0)
+                continue;
 
-			// 버퍼 읽기
-			int packetLength = 0;
-			CopyMemory(&packetLength, buf, sizeof(short));
-			
-			// 이 이상 큰 패킷은 읽지 않는다
-			if (packetLength > MAX_BUF_SIZE || packetLength <= 0)
-				continue;
+            msg packet;
+            int len = sizeof(short);
+            CopyMemory(&packet.no, buf + len, sizeof(int));
+            len += sizeof(int);
 
-			msg packet;
-			int len = sizeof(short);
-			CopyMemory(&packet.no, buf + len, sizeof(int));
-			len += sizeof(int);
+            char message[MAX_BUF_SIZE + 1] = { 0, };
+            CopyMemory(&message, buf + len, packetLength - len);
+            packet.message = message;
 
-			char message[MAX_BUF_SIZE + 1] = { 0, };
-			CopyMemory(&message, buf + len, packetLength - len);
-			packet.message = message;
-
-			// ++
-			packet.no++;
-			packet.message += std::to_string(packet.no);
-			
+            // ++
+            packet.no++;
+            packet.message += std::to_string(packet.no);
 
 
-			// send
-			short bufSize = sizeof(short) + packet.size();
-			CopyMemory(buf, &bufSize, sizeof(short));
-			
-			int lenWrite = sizeof(short);
+            // send
+            short bufSize = sizeof(short) + packet.size();
+            CopyMemory(buf, &bufSize, sizeof(short));
+            
+            int lenWrite = sizeof(short);
 
-			CopyMemory(buf + lenWrite, &packet.no, sizeof(int));
-			lenWrite += sizeof(int);
+            CopyMemory(buf + lenWrite, &packet.no, sizeof(int));
+            lenWrite += sizeof(int);
 
-			
-			sprintf_s(message, packet.message.c_str(), packet.message.length());
-			CopyMemory(buf + lenWrite, &message, packet.message.length());
-			lenWrite += packet.message.length();
+            
+            sprintf_s(message, packet.message.c_str(), packet.message.length());
+            CopyMemory(buf + lenWrite, &message, packet.message.length());
+            lenWrite += packet.message.length();
 
-			
-			retval = send(client_sock, buf, lenWrite, 0);
-			if (SOCKET_ERROR == retval)
-				break;
+            
+            retval = send(client_sock, buf, lenWrite, 0);
+            if (SOCKET_ERROR == retval)
+                break;
 
-		}
+        }
 
-		closesocket(client_sock);
-	}
+        closesocket(client_sock);
+    }
 
-	serverSession.CloseSession();
+    serverSession.CloseSession();
 
-	NetworkEngine::Inst()->ReleaseWSA();
+    NetworkEngine::Inst()->ReleaseWSA();
 
-	return 0;
+    return 0;
 }

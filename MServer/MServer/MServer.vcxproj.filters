@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="SDKs">
+      <UniqueIdentifier>{55c9f11c-c9de-41e4-af25-a511b4eda81c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,11 +32,11 @@
     <ClCompile Include="Session.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Shared\format.cc">
+      <Filter>SDKs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Shared\util.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkEngine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -51,6 +54,12 @@
     </ClInclude>
     <ClInclude Include="Session.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\util.h">
+      <Filter>SDKs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\format.h">
+      <Filter>SDKs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

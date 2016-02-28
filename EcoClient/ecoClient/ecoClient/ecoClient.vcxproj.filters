@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SDKs">
+      <UniqueIdentifier>{d6052832-93c1-48f0-a868-3d7c0239dd86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -25,7 +28,10 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Shared\util.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>SDKs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Shared\format.h">
+      <Filter>SDKs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="ecoClient.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Shared\format.cc">
+      <Filter>SDKs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
