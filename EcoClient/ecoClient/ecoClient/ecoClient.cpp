@@ -6,7 +6,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-    int retval;
+    int32 retval = 0;
 
     // 윈속 초기화
     WSADATA wsa;
@@ -35,45 +35,33 @@ int _tmain(int argc, _TCHAR* argv[])
     }
 
     // 데이터 통신
-    char buf[MAX_BUF_SIZE + 1] = { 0, };
+    std::array<char, MAX_BUF_SIZE + 1> buf = {0};
 
     while (1)
     {
         // 데이터 입력
-        ZeroMemory(buf, sizeof(buf));
+        buf.fill('\0');
         LOG_INFO("[보낼 데이터]");
         
-        if (NULL == fgets(buf, MAX_BUF_SIZE, stdin))
+        if (NULL == fgets(buf.data(), MAX_BUF_SIZE, stdin))
         {
             continue;
         }
 
         // enter 제거
-        int len = strlen(buf);
+        int32 len = static_cast<int32>(strlen(buf.data()));
         buf[len - 1] = '\0';
 
         msg packet;
         packet.no = 0;
-        packet.message = buf;
+        packet.message = buf.data();
 
         // 데이터 보내기
-        ZeroMemory(buf, sizeof(buf));
+        buf.fill('\0');
 
-        short bufSize = sizeof(short) + packet.size();
-        CopyMemory(buf, &bufSize, sizeof(short));
+        packet.WriteBuffer(buf.data());
 
-        int lenWrite = sizeof(short);
-
-        CopyMemory(buf + lenWrite, &packet.no, sizeof(int));
-        lenWrite += sizeof(int);
-
-        char message[MAX_BUF_SIZE + 1] = { 0, };
-        sprintf_s(message, packet.message.c_str(), packet.message.length());
-        CopyMemory(buf + lenWrite, &message, packet.message.length());
-        lenWrite += packet.message.length();
-
-
-        retval = send(sock, buf, lenWrite, 0);
+        retval = send(sock, buf.data(), packet.GetPacketSize(), 0);
         if (SOCKET_ERROR == retval)
         {
             LOG_ERROR("send() error: {}", retval);
@@ -85,32 +73,27 @@ int _tmain(int argc, _TCHAR* argv[])
         while (1)
         {
             // 데이터 받기
-            ZeroMemory(buf, sizeof(buf));
-            retval = recv(sock, buf, MAX_BUF_SIZE, 0);
+            buf.fill('\0');
+
+            retval = recv(sock, buf.data(), buf.size(), 0);
             if (SOCKET_ERROR == retval || retval == 0)
             {
                 LOG_ERROR("recv error: {}", retval);
                 break;
             }
 
-            // 받은 데이터 출력
-            int packetLength = 0;
-            CopyMemory(&packetLength, buf, sizeof(short));
-
             msg packet;
-            int lenRead = sizeof(short);
-            CopyMemory(&packet.no, buf + lenRead, sizeof(int));
-            lenRead += sizeof(int);
+            if (!packet.ParseBuffer(buf.data()))
+            {
+                LOG_ERROR("msg parse failed.");
+                break;
+            }
 
-            char message[MAX_BUF_SIZE + 1] = { 0, };
-            CopyMemory(&message, buf + lenRead, packetLength - lenRead);
-            packet.message = message;
-
-            LOG_INFO("[TCP Client] {} 바이트를 보냈습니다.", retval);
+            LOG_INFO("[TCP Client] {} 바이트를 받았습니다.", retval);
             LOG_INFO("[받은 데이터] No.{}-{}",  packet.no, packet.message);
 
             // 데이터 보내기
-            retval = send(sock, buf, strlen(buf), 0);
+            retval = send(sock, buf.data(), packet.GetPacketSize(), 0);
             if (SOCKET_ERROR == retval)
             {
                 LOG_ERROR("send() error: {}", retval);
