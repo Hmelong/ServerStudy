@@ -26,7 +26,7 @@ bool PacketHandler::HandlePacket(Session* session, PacketBuffer packet)
         return PACKET_NO_0(session, packet);
         break;
     case NO_1:
-        return PACKET_NO_0(session, packet);
+        return PACKET_NO_1(session, packet);
         break;
     }
 
@@ -35,6 +35,13 @@ bool PacketHandler::HandlePacket(Session* session, PacketBuffer packet)
 
 bool PacketHandler::PACKET_NO_0(Session* session, PacketBuffer packet)
 {
+	if (session == nullptr)
+		return false;
+
+	packet.no++;
+	packet.message += std::to_string(packet.no);
+
+	session->SendPacket(packet);
 
     return true;
 }

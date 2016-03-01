@@ -1,8 +1,9 @@
 // ecoClient.cpp : 콘솔 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
-#include "stdafx.h"
 #include "util.h"
+
+#include "PacketBuffer.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -52,7 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
         int32 len = static_cast<int32>(strlen(buf.data()));
         buf[len - 1] = '\0';
 
-        msg packet;
+		PacketBuffer packet;
         packet.no = 0;
         packet.message = buf.data();
 
@@ -82,7 +83,7 @@ int _tmain(int argc, _TCHAR* argv[])
                 break;
             }
 
-            msg packet;
+			PacketBuffer packet;
             if (!packet.ParseBuffer(buf.data()))
             {
                 LOG_ERROR("msg parse failed.");

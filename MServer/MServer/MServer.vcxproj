@@ -83,9 +83,9 @@
     <ClCompile Include="..\..\Shared\format.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Shared\PacketBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkEngine.cpp" />
-    <ClCompile Include="PacketBuffer.cpp" />
     <ClCompile Include="PacketHandler.cpp" />
     <ClCompile Include="ServerSession.cpp" />
     <ClCompile Include="Session.cpp" />
@@ -93,10 +93,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\Shared\format.h" />
     <ClInclude Include="..\..\Shared\log.h" />
+    <ClInclude Include="..\..\Shared\PacketBuffer.h" />
     <ClInclude Include="..\..\Shared\primitive_types.h" />
     <ClInclude Include="..\..\Shared\util.h" />
     <ClInclude Include="NetworkEngine.h" />
-    <ClInclude Include="PacketBuffer.h" />
     <ClInclude Include="PacketHandler.h" />
     <ClInclude Include="ServerSession.h" />
     <ClInclude Include="Session.h" />
