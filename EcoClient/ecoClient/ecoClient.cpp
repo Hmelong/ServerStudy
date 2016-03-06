@@ -53,7 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
         int32 len = static_cast<int32>(strlen(buf.data()));
         buf[len - 1] = '\0';
 
-		PacketBuffer packet;
+        PacketBuffer packet;
         packet.no = 0;
         packet.message = buf.data();
 
@@ -83,7 +83,7 @@ int _tmain(int argc, _TCHAR* argv[])
                 break;
             }
 
-			PacketBuffer packet;
+            PacketBuffer packet;
             if (!packet.ParseBuffer(buf.data()))
             {
                 LOG_ERROR("msg parse failed.");

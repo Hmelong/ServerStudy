@@ -18,17 +18,17 @@ int _tmain(int argc, _TCHAR* argv[])
     if (serverSession.InitSession() == false)
         return -1;
 
-	Session* clientSession = new Session();
+    Session* clientSession = new Session();
 
     std::array<char, MAX_BUF_SIZE + 1> buf = {0};
 
     while (1)
     {
-		if (clientSession == nullptr)
-			continue;
+        if (clientSession == nullptr)
+            continue;
 
-		if (clientSession->InitSession(serverSession.listen_sock) == false)
-			continue;
+        if (clientSession->InitSession(serverSession.GetSocket()) == false)
+            continue;
 
         LOG_INFO("client_sock success.");
 
@@ -36,20 +36,20 @@ int _tmain(int argc, _TCHAR* argv[])
         while (1)
         {
             // recv
-			int32 retval = recv(clientSession->client_sock, buf.data(), buf.size(), 0);
+            int32 retval = recv(clientSession->client_sock, buf.data(), buf.size(), 0);
             if (SOCKET_ERROR == retval || 0 == retval)
                 break;
 
-			PacketBuffer packet;
+            PacketBuffer packet;
             if (!packet.ParseBuffer(buf.data()))
                 continue;
 
-			// handle packet
-			PacketHandler::Inst()->HandlePacket(clientSession, packet);
+            // handle packet
+            PacketHandler::Inst()->HandlePacket(clientSession, packet);
 
         }
 
-		clientSession->CloseSession();
+        clientSession->CloseSession();
     }
 
     serverSession.CloseSession();

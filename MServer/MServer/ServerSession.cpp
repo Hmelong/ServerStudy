@@ -33,6 +33,11 @@ void ServerSession::CloseSession()
     closesocket(listen_sock);
 }
 
+SOCKET ServerSession::GetSocket() const
+{
+    return listen_sock;
+}
+
 bool ServerSession::InitSocket()
 {
     listen_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,7 +59,7 @@ bool ServerSession::Bind()
     serverAddr.sin_port = htons(9000);
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    int retval = bind(listen_sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+    int32 retval = bind(listen_sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
     if (retval == SOCKET_ERROR)
     {
         LOG_ERROR("bind() error: {}", retval);
@@ -67,7 +72,7 @@ bool ServerSession::Bind()
 
 bool ServerSession::Listen()
 {
-    int retval = listen(listen_sock, SOMAXCONN);
+    int32 retval = listen(listen_sock, SOMAXCONN);
     if (retval == SOCKET_ERROR)
     {
         LOG_ERROR("listen() error: {}", retval);

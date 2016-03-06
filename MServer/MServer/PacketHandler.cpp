@@ -35,19 +35,18 @@ bool PacketHandler::HandlePacket(Session* session, PacketBuffer packet)
 
 bool PacketHandler::PACKET_NO_0(Session* session, PacketBuffer packet)
 {
-	if (session == nullptr)
-		return false;
+    if (session == nullptr)
+        return false;
 
-	packet.no++;
-	packet.message += std::to_string(packet.no);
+    packet.no++;
+    packet.message += std::to_string(packet.no);
 
-	session->SendPacket(packet);
+    session->SendPacket(packet);
 
     return true;
 }
 
 bool PacketHandler::PACKET_NO_1(Session* session, PacketBuffer packet)
 {
-
     return true;
 }

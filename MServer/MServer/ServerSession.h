@@ -9,12 +9,14 @@ public:
     bool InitSession();
     void CloseSession();
 
+    SOCKET GetSocket() const;
+
 protected:
     bool InitWSA();
     bool InitSocket();
     bool Bind();
     bool Listen();
 
-public:
+private:
     SOCKET listen_sock;
 };

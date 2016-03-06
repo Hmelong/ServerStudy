@@ -7,9 +7,9 @@ class Session
 public:
     Session();
     ~Session();
-	
-	bool InitSession(SOCKET listen_sock);
-	void CloseSession();
+
+    bool InitSession(SOCKET listen_sock);
+    void CloseSession();
 
     bool SendPacket(PacketBuffer packet);
 
