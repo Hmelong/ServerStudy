@@ -8,8 +8,8 @@ public:
     PacketHandler();
     ~PacketHandler();
 
-    bool HandlePacket(Session* session, PacketBuffer packet);
+    bool HandlePacket(Session* pSession, const PacketBuffer& packet);
 
-    static bool PACKET_NO_0(Session* session, PacketBuffer packet);
-    static bool PACKET_NO_1(Session* session, PacketBuffer packet);
+    static bool PACKET_NO_0(Session& session, const PacketBuffer& packet);
+    static bool PACKET_NO_1(Session& session, const PacketBuffer& packet);
 };
