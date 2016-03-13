@@ -20,6 +20,14 @@ void PacketHandler::InitPacketFunctor()
     packetFunctor[NO_1] = std::make_unique<PACKET_NO_1>();
 }
 
+void PacketHandler::ReleasePacketFunctor()
+{
+    for (auto& packet : packetFunctor)
+    {
+        packet.reset();
+    }
+}
+
 bool PacketHandler::HandlePacket(Session* pSession, const PacketBuffer& packet)
 {
     if (pSession == nullptr)

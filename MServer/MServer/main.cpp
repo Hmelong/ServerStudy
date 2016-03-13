@@ -54,6 +54,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
         clientSession->CloseSession();
     }
+    
+
+    PacketHandler::Inst()->ReleasePacketFunctor();
 
     serverSession.CloseSession();
 

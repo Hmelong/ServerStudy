@@ -24,9 +24,10 @@ public:
     ~PacketHandler();
 
     void InitPacketFunctor();
+    void ReleasePacketFunctor();
 
     bool HandlePacket(Session* pSession, const PacketBuffer& packet);
 
-    std::unique_ptr<PACKET> packetFunctor[MAX_NO];
+    std::array<std::unique_ptr<PACKET>, MAX_NO> packetFunctor;
 };
 
