@@ -18,6 +18,9 @@ int _tmain(int argc, _TCHAR* argv[])
     if (serverSession.InitSession() == false)
         return -1;
 
+    PacketHandler::Inst()->InitPacketFunctor();
+
+
     Session* clientSession = new Session();
 
     std::array<char, MAX_BUF_SIZE + 1> buf = {0};

@@ -14,6 +14,11 @@ PacketHandler::~PacketHandler()
 {
 }
 
+void PacketHandler::InitPacketFunctor()
+{
+    packetFunctor[NO_0] = new PACKET_NO_0;
+    packetFunctor[NO_1] = new PACKET_NO_1;
+}
 
 bool PacketHandler::HandlePacket(Session* pSession, const PacketBuffer& packet)
 {
@@ -22,23 +27,15 @@ bool PacketHandler::HandlePacket(Session* pSession, const PacketBuffer& packet)
 
     Session& session = *pSession;
 
-    switch (packet.no)
-    {
-    case NO_0:
-        return PACKET_NO_0(session, packet);
-        break;
-    case NO_1:
-        return PACKET_NO_1(session, packet);
-        break;
-    default:
-        assert(false);
-        break;
-    }
+    if (packet.no < 0 || packet.no + 1 > MAX_NO)
+        return false;
+
+    packetFunctor[packet.no];
 
     return true;
 }
 
-bool PacketHandler::PACKET_NO_0(Session& session, const PacketBuffer& packet)
+bool PACKET_NO_0::operator()(Session& session, const PacketBuffer& packet)
 {
     PacketBuffer out;
     out.no = packet.no + 1;
@@ -49,7 +46,7 @@ bool PacketHandler::PACKET_NO_0(Session& session, const PacketBuffer& packet)
     return true;
 }
 
-bool PacketHandler::PACKET_NO_1(Session& session, const PacketBuffer& packet)
+bool PACKET_NO_1::operator()(Session& session, const PacketBuffer& packet)
 {
     return true;
 }
