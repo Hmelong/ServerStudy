@@ -16,8 +16,8 @@ PacketHandler::~PacketHandler()
 
 void PacketHandler::InitPacketFunctor()
 {
-    packetFunctor[NO_0] = new PACKET_NO_0;
-    packetFunctor[NO_1] = new PACKET_NO_1;
+    packetFunctor[NO_0] = std::make_unique<PACKET_NO_0>();
+    packetFunctor[NO_1] = std::make_unique<PACKET_NO_1>();
 }
 
 bool PacketHandler::HandlePacket(Session* pSession, const PacketBuffer& packet)

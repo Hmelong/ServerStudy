@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <array>
+#include <memory>
 #include "primitive_types.h"
 #include "log.h"
 

@@ -27,6 +27,6 @@ public:
 
     bool HandlePacket(Session* pSession, const PacketBuffer& packet);
 
-    PACKET* packetFunctor[MAX_NO];
+    std::unique_ptr<PACKET> packetFunctor[MAX_NO];
 };
 
