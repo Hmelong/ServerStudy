@@ -84,11 +84,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\Shared\PacketBuffer.cpp" />
+    <ClCompile Include="ClientSessionHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkEngine.cpp" />
-    <ClCompile Include="PacketHandler.cpp" />
     <ClCompile Include="ServerSession.cpp" />
-    <ClCompile Include="Session.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Shared\format.h" />
@@ -97,9 +96,9 @@
     <ClInclude Include="..\..\Shared\primitive_types.h" />
     <ClInclude Include="..\..\Shared\util.h" />
     <ClInclude Include="NetworkEngine.h" />
-    <ClInclude Include="PacketHandler.h" />
+    <ClInclude Include="PacketHandlerManager.h" />
     <ClInclude Include="ServerSession.h" />
-    <ClInclude Include="Session.h" />
+    <ClInclude Include="ClientSession.h" />
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,4 +23,6 @@ public:
 
     void WriteBuffer(char* pBuffer);
     bool ParseBuffer(const char* pBuffer);
+
+    void CopyFrom(const PacketBuffer& rhs);
 };

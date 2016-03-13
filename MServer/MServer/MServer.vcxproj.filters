@@ -23,17 +23,14 @@
     <ClCompile Include="ServerSession.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PacketHandler.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Session.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Shared\format.cc">
       <Filter>Shared</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Shared\PacketBuffer.cpp">
       <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSessionHandler.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,12 +41,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ServerSession.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketHandler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Session.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Shared\util.h">
@@ -66,6 +57,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Shared\PacketBuffer.h">
       <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHandlerManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

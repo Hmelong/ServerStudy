@@ -51,3 +51,13 @@ bool PacketBuffer::ParseBuffer(const char* pBuffer)
 
     return true;
 }
+
+void PacketBuffer::CopyFrom(const PacketBuffer& rhs)
+{
+    if (this == &rhs)
+        return;
+
+    len = rhs.len;
+    no = rhs.no;
+    message = rhs.message;
+}

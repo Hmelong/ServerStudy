@@ -17,7 +17,7 @@
 #define MAX_BUF_SIZE 65535
 
 
-enum PACKET_NO
+enum PACKET_NO : uint16
 {
     NO_0 = 0,
     NO_1,
