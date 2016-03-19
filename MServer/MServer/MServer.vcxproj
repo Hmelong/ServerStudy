@@ -53,12 +53,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>../../Shared</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Lib;../../Shared</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)..\protoc-2.6.1\protoc.exe -I=$(SolutionDir)..\protoc-2.6.1\ --cpp_out=$(SolutionDir)..\shared\ $(SolutionDir)..\protoc-2.6.1\packet.proto</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -100,6 +103,9 @@
     <ClInclude Include="ServerSession.h" />
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="Singleton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\protoc-2.6.1\packet.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

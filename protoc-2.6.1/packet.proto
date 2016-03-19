@@ -1,0 +1,22 @@
+package tutorial;
+
+message Packet 
+{
+  required string name = 1;
+  required int32 id = 2;
+  optional string email = 3;
+
+  enum TEST_TYPE
+  {
+    TT_NONE = 0;
+    TT_ONE = 1;
+  }
+
+  message Packet_NO_1
+  {
+    required string number = 1;
+    optional TEST_TYPE type = 2 [default = TT_NONE];
+  }
+
+  repeated Packet_NO_1 one = 4;
+}

@@ -3,6 +3,8 @@
 #include "ClientSession.h"
 #include "PacketBuffer.h"
 
+#include "packet.pb.h"
+
 DECLARE_HANDLER(ClientSession, PACKET_NO_0);
 DECLARE_HANDLER(ClientSession, PACKET_NO_1);
 
@@ -25,5 +27,6 @@ IMPLEMENT_HANDLER(ClientSession, PACKET_NO_0)
 
 IMPLEMENT_HANDLER(ClientSession, PACKET_NO_1)
 {
+
     return true;
 }
