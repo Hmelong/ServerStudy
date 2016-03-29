@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MServer", "MServer\MServer.vcxproj", "{DD068756-0664-4890-B3D7-45A4FD69AA1B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB} = {97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "protocol", "..\Shared\protocol\protocol.vcxproj", "{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{DD068756-0664-4890-B3D7-45A4FD69AA1B}.Debug|Win32.Build.0 = Debug|Win32
 		{DD068756-0664-4890-B3D7-45A4FD69AA1B}.Release|Win32.ActiveCfg = Release|Win32
 		{DD068756-0664-4890-B3D7-45A4FD69AA1B}.Release|Win32.Build.0 = Release|Win32
+		{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}.Debug|Win32.Build.0 = Debug|Win32
+		{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}.Release|Win32.ActiveCfg = Release|Win32
+		{97908DAC-C3BF-4263-9B01-BE0FF1CE02FB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

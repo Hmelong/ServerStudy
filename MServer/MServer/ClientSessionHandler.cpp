@@ -1,32 +1,23 @@
 #include "util.h"
 
 #include "ClientSession.h"
-#include "PacketBuffer.h"
+#include "p_client_server.h"
+#include "p_server_client.h"
 
-#include "packet.pb.h"
-
-DECLARE_HANDLER(ClientSession, PACKET_NO_0);
-DECLARE_HANDLER(ClientSession, PACKET_NO_1);
+DECLARE_HANDLER(ClientSession, PC2S_Chat);
 
 IMPLEMENT_INITIALIZE(ClientSession)
 {
-    REGISTER_HANDLER(PACKET_NO_0, NO_0);
-    REGISTER_HANDLER(PACKET_NO_1, NO_1);
+    REGISTER_HANDLER(PC2S_Chat);
 }
 
-IMPLEMENT_HANDLER(ClientSession, PACKET_NO_0)
+IMPLEMENT_HANDLER(ClientSession, PC2S_Chat)
 {
-    PacketBuffer out;
-    out.no = packet.no + 1;
-    out.message = fmt::format("{}{}", packet.message, packet.no);
+    static uint64 count = 0;
+
+    PS2C_Chat out;
+    out.set_message(fmt::format("{},{}", packet.message(), ++count));
 
     session.SendPacket(out);
-
-    return true;
-}
-
-IMPLEMENT_HANDLER(ClientSession, PACKET_NO_1)
-{
-
     return true;
 }

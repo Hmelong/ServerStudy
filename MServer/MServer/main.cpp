@@ -8,6 +8,7 @@
 
 #include "PacketHandlerManager.h"
 #include "PacketBuffer.h"
+#include "google\protobuf\message_lite.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -35,16 +36,15 @@ int _tmain(int argc, _TCHAR* argv[])
         // 데이터 통신
         while (1)
         {
+            buf.assign(0);
+
             // recv
-            int32 retval = recv(upClientSession->GetClientSocket(), buf.data(), buf.size(), 0);
-            if (SOCKET_ERROR == retval || 0 == retval)
+            int32 retval = recv(upClientSession->GetClientSocket(),
+                buf.data(), static_cast<int32>(buf.size()), 0);
+            if (SOCKET_ERROR == retval)
                 break;
 
-            PacketBuffer packet;
-            if (!packet.ParseBuffer(buf.data()))
-                continue;
-
-            upClientSession->OnRecv(packet);
+            upClientSession->OnRecv(buf.data(), retval);
         }
 
         upClientSession->CloseSession();

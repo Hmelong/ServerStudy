@@ -44,5 +44,8 @@
     <ClInclude Include="..\..\Shared\primitive_types.h">
       <Filter>Shared</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Shared\p_client_server.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
