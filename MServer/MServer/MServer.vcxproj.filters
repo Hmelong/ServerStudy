@@ -12,9 +12,6 @@
     <Filter Include="Shared">
       <UniqueIdentifier>{55c9f11c-c9de-41e4-af25-a511b4eda81c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="protobuf">
-      <UniqueIdentifier>{72f49641-c09f-437a-b03e-69f3f5867801}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,10 +64,14 @@
     <ClInclude Include="ClientSession.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\protoc-2.6.1\packet.proto">
-      <Filter>protobuf</Filter>
-    </None>
+    <ClInclude Include="..\..\Shared\p_client_server.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\packet_defines.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\p_server_client.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

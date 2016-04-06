@@ -1,15 +1,17 @@
-// ecoClient.cpp : ÄÜ¼Ö ÀÀ¿ë ÇÁ·Î±×·¥¿¡ ´ëÇÑ ÁøÀÔÁ¡À» Á¤ÀÇÇÕ´Ï´Ù.
+ï»¿// ecoClient.cpp : ì½˜ì†” ì‘ìš© í”„ë¡œê·¸ë¨ì— ëŒ€í•œ ì§„ì…ì ì„ ì •ì˜í•©ë‹ˆë‹¤.
 //
 
 #include "util.h"
 
 #include "PacketBuffer.h"
+#include "p_client_server.h"
+#include "p_server_client.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
     int32 retval = 0;
 
-    // À©¼Ó ÃÊ±âÈ­
+    // ìœˆì† ì´ˆê¸°í™”
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
     {
@@ -35,80 +37,109 @@ int _tmain(int argc, _TCHAR* argv[])
         LOG_ERROR("connect error: {}", retval);
     }
 
-    // µ¥ÀÌÅÍ Åë½Å
-    std::array<char, MAX_BUF_SIZE + 1> buf = {0};
+    // ë°ì´í„° í†µì‹ 
+    PacketBuffer sendBuffer;
+    PacketBuffer recvBuffer;
 
     while (1)
     {
-        // µ¥ÀÌÅÍ ÀÔ·Â
-        buf.fill('\0');
-        LOG_INFO("[º¸³¾ µ¥ÀÌÅÍ]");
+        // ë°ì´í„° ì…ë ¥
+        LOG_INFO("[ë³´ë‚¼ ë°ì´í„°]");
         
-        if (NULL == fgets(buf.data(), MAX_BUF_SIZE, stdin))
+        std::array<char, MAX_BUF_SIZE> inputData = {0};
+        if (NULL == fgets(inputData.data(), inputData.size(), stdin))
         {
             continue;
         }
 
-        // enter Á¦°Å
-        int32 len = static_cast<int32>(strlen(buf.data()));
-        buf[len - 1] = '\0';
+        // enter ì œê±°
+        uint32 len = static_cast<uint32>(strlen(inputData.data()) - 1);
+        inputData.at(len) = '\0';
 
-        PacketBuffer packet;
-        packet.no = 0;
-        packet.message = buf.data();
+        PC2S_Chat out;
+        out.set_message(inputData.data());
 
-        // µ¥ÀÌÅÍ º¸³»±â
-        buf.fill('\0');
+        // ë°ì´í„° ë³´ë‚´ê¸°
+        if (!sendBuffer.SetPacket(out))
+        {
+            LOG_ERROR("Fail to set packet to packetBuffer.");
+            continue;
+        }
 
-        packet.WriteBuffer(buf.data());
-
-        retval = send(sock, buf.data(), packet.GetPacketSize(), 0);
+        retval = send(sock, sendBuffer.GetPacketBuffer(), sendBuffer.GetPacketSize(), 0);
         if (SOCKET_ERROR == retval)
         {
             LOG_ERROR("send() error: {}", retval);
             continue;
         }
+        sendBuffer.ConsumePacket();
 
-        LOG_INFO("[TCP Client] {} ¹ÙÀÌÆ®¸¦ º¸³Â½À´Ï´Ù.", retval);
+        LOG_INFO("[TCP Client] {} ë°”ì´íŠ¸ë¥¼ ë³´ëƒˆìŠµë‹ˆë‹¤.", retval);
 
         while (1)
         {
-            // µ¥ÀÌÅÍ ¹Ş±â
-            buf.fill('\0');
+            // ë°ì´í„° ë°›ê¸°
+            std::array<char, MAX_BUF_SIZE> recvData = {0};
 
-            retval = recv(sock, buf.data(), buf.size(), 0);
+            retval = recv(sock, recvData.data(), recvData.size(), 0);
             if (SOCKET_ERROR == retval || retval == 0)
             {
                 LOG_ERROR("recv error: {}", retval);
                 break;
             }
 
-            PacketBuffer packet;
-            if (!packet.ParseBuffer(buf.data()))
+            if (!recvBuffer.AppendBuffer(recvData.data(), retval))
             {
-                LOG_ERROR("msg parse failed.");
+                LOG_ERROR("Fail to append buffer.");
                 break;
             }
 
-            LOG_INFO("[TCP Client] {} ¹ÙÀÌÆ®¸¦ ¹Ş¾Ò½À´Ï´Ù.", retval);
-            LOG_INFO("[¹ŞÀº µ¥ÀÌÅÍ] No.{}-{}",  packet.no, packet.message);
+            if (!recvBuffer.IsAbleToGetPacket())
+                continue;
 
-            // µ¥ÀÌÅÍ º¸³»±â
-            retval = send(sock, buf.data(), packet.GetPacketSize(), 0);
+            uint16 packetNo = recvBuffer.GetPacketNo();
+
+            PS2C_Chat packet;
+            if (!packet.ParseFromArray(
+                recvBuffer.GetPayloadBuffer(), recvBuffer.GetPayloadBufferSize()))
+            {
+                LOG_ERROR("Fail to packet parse.");
+                break;
+            }
+
+            recvBuffer.ConsumePacket();
+
+            LOG_INFO("[TCP Client] {} ë°”ì´íŠ¸ë¥¼ ë°›ì•˜ìŠµë‹ˆë‹¤.", retval);
+            //LOG_INFO("[ë°›ì€ ë°ì´í„°] No.{}-{}",  packetNo, packet.message());
+
+
+            // ë°ì´í„° ë³´ë‚´ê¸°
+            PC2S_Chat out;
+            out.set_message(packet.message());
+
+            if (!sendBuffer.SetPacket(out))
+            {
+                LOG_ERROR("Fail to set packet.");
+                break;
+            }
+
+            retval = send(sock, sendBuffer.GetPacketBuffer(), sendBuffer.GetPacketSize(), 0);
             if (SOCKET_ERROR == retval)
             {
                 LOG_ERROR("send() error: {}", retval);
                 break;
             }
 
-            LOG_INFO("[TCP Client] {} ¹ÙÀÌÆ®¸¦ º¸³Â½À´Ï´Ù.", retval);
+            sendBuffer.ConsumePacket();
+
+            LOG_INFO("[TCP Client] {} ë°”ì´íŠ¸ë¥¼ ë³´ëƒˆìŠµë‹ˆë‹¤.", retval);
         }
     }
 
     // closesocket();
     closesocket(sock);
 
-    // À©¼Ó Á¾·á
+    // ìœˆì† ì¢…ë£Œ
     WSACleanup();
 
     return 0;

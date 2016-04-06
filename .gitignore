@@ -22,8 +22,11 @@
 x64/
 x86/
 bld/
-[Bb]in/
+[Bb]in*/
 [Oo]bj/
+Shared/protocol/compiled/*.pb.h
+Shared/protocol/compiled/*.pb.cc
+
 
 # Visual Studio 2015 cache/options directory
 .vs/

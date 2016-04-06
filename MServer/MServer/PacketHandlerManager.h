@@ -1,18 +1,18 @@
 ﻿#pragma once
 
-class PacketBuffer;
+#include <google/protobuf/message_lite.h>
+#include "PacketBuffer.h"
 
-template<typename TSession, typename TPacketBuffer>
+template<typename TSession, typename TProtoBuf>
 class PacketHandler;
 
 // Packet 정의
-#define DECLARE_HANDLER(TSession, TPacketBuffer)\
-class TPacketBuffer : public PacketBuffer {};\
+#define DECLARE_HANDLER(TSession, TProtoBuf)\
 template <>\
-class PacketHandler<TSession, TPacketBuffer>\
+class PacketHandler<TSession, TProtoBuf>\
 {\
 public:\
-    bool operator()(TSession& session, const TPacketBuffer& packet);\
+    bool operator()(TSession& session, const TProtoBuf& packet);\
 };
 
 // Static 함수 초기화 선언
@@ -21,12 +21,12 @@ TSession::TPacketHandlerManager SessionBase<TSession>::_s_packet_handler_manager
 static void Initialize(TSession::TPacketHandlerManager& packetHandlerManager)
 
 // 패킷 함수 핸들러에 등록
-#define REGISTER_HANDLER(TPacketBuffer, packetNumber)\
-packetHandlerManager.Register<TPacketBuffer>(packetNumber)
+#define REGISTER_HANDLER(TProtoBuf)\
+packetHandlerManager.Register<TProtoBuf>(TProtoBuf::PROTOCOL_NUMBER)
 
 // 패킷 핸들러 구현
-#define IMPLEMENT_HANDLER(TSession, TPacketBuffer)\
-bool PacketHandler<TSession, TPacketBuffer>::operator()(TSession& session, const TPacketBuffer& packet)
+#define IMPLEMENT_HANDLER(TSession, TProtoBuf)\
+bool PacketHandler<TSession, TProtoBuf>::operator()(TSession& session, const TProtoBuf& packet)
 
 template<typename TSession>
 class PacketFunctorBase
@@ -35,22 +35,29 @@ public:
     explicit PacketFunctorBase() {};
     virtual ~PacketFunctorBase() {};
 
-    virtual bool Handle(TSession& session, const PacketBuffer& packet) const = 0;
+    virtual bool Handle(TSession& session, PacketBuffer& packetBuffer) const = 0;
 };
 
-template<typename TSession, typename TPacketBuffer>
+template<typename TSession, typename TProtoBuf>
 class PacketFunctor : PacketFunctorBase<TSession>
 {
 public:
     explicit PacketFunctor() {};
     virtual ~PacketFunctor() {};
 
-    virtual bool Handle(TSession& session, const PacketBuffer& packet) const override
+    virtual bool Handle(TSession& session, PacketBuffer& packetBuffer) const override
     {
-        TPacketBuffer packetBuffer;
-        packetBuffer.CopyFrom(packet);
+        TProtoBuf protobuf;
+        if (!protobuf.ParseFromArray(
+            packetBuffer.GetPayloadBuffer(), packetBuffer.GetPayloadBufferSize()))
+        {
+            LOG_ERROR("PacketParse error.");
+            return false;
+        }
 
-        return PacketHandler<TSession, TPacketBuffer>()(session, packetBuffer);
+        packetBuffer.ConsumePacket();
+
+        return PacketHandler<TSession, TProtoBuf>()(session, protobuf);
     }
 };
 
@@ -69,7 +76,7 @@ public:
         ClearPacketFunctors();
     };
 
-    template<class TPacketBuffer>
+    template<class TProtoBuf>
     bool Register(uint16 protocolNumber)
     {
         if (protocolNumber > packetFunctors.size())
@@ -88,22 +95,24 @@ public:
 
         PacketFunctorBase<TSession>* pPacketFunctor =
             reinterpret_cast<PacketFunctorBase<TSession>*>(
-            new PacketFunctor<TSession, TPacketBuffer>());
+            new PacketFunctor<TSession, TProtoBuf>());
 
         packetFunctors[protocolNumber].reset(pPacketFunctor);
         return true;
     }
 
-    bool Handle(TSession& session, const PacketBuffer& packet)
+    bool Handle(TSession& session, PacketBuffer& packetBuffer)
     {
-        PacketFunctorBase<TSession>* pFnPacketHandler = packetFunctors[packet.no].get();
+        const uint16 packetNo = packetBuffer.GetPacketNo();
+
+        PacketFunctorBase<TSession>* pFnPacketHandler = packetFunctors[packetNo].get();
         if (!pFnPacketHandler)
         {
-            LOG_ERROR("PacketHandler is not exist. no: {}", packet.no);
+            LOG_ERROR("PacketHandler is not exist. packetNo: {}", packetNo);
             return false;
         }
 
-        return pFnPacketHandler->Handle(session, packet);
+        return pFnPacketHandler->Handle(session, packetBuffer);
     }
 
     void ClearPacketFunctors()
@@ -115,5 +124,5 @@ public:
     }
 
 private:
-    std::array<std::unique_ptr<PacketFunctorBase<TSession>>, MAX_NO> packetFunctors;
+    std::array<std::unique_ptr<PacketFunctorBase<TSession>>, UINT16_MAX> packetFunctors;
 };

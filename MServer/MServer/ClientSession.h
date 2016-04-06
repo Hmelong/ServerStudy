@@ -1,5 +1,6 @@
 #pragma once
 #include "PacketHandlerManager.h"
+#include "PacketBuffer.h"
 
 template<typename TSession>
 class SessionBase
@@ -38,33 +39,65 @@ public:
         return client_sock;
     }
 
-    bool SendPacket(const PacketBuffer& packet)
+    template<typename T>
+    bool SendPacket(const T& packet)
     {
-        PacketBuffer out(packet);
+        if (!sendBuffer.SetPacket(packet))
+        {
+            LOG_ERROR("Fail to SetPacket().");
+            return false;
+        }
 
-        std::array<char, MAX_BUF_SIZE + 1> buf = {0};
-
-        // send
-        out.WriteBuffer(buf.data());
-
-        int32 retval = send(client_sock, buf.data(), out.GetPacketSize(), 0);
+        int32 retval = send(client_sock,
+            sendBuffer.GetPacketBuffer(), sendBuffer.GetPacketSize(), 0);
         if (SOCKET_ERROR == retval)
             return false;
 
+        sendBuffer.ConsumePacket();
         return true;
     }
 
-    virtual void OnRecv(const PacketBuffer& packet)
+    virtual void OnRecv(const char* pBuffer, uint32 recvSize)
     {
-        if (!_s_packet_handler_manager.Handle(static_cast<TSession&>(*this), packet))
+        if (!pBuffer)
         {
-            LOG_ERROR("OnRecv() HandlerPacket failed. packetNumber: {}", packet.no);
+            LOG_ERROR("OnRecv() pBuffer is nullptr.");
+            return;
+        }
+
+        if (recvSize > MAX_BUF_SIZE)
+        {
+            LOG_ERROR("OnRecv() recvSize is bigger than MAX_BUF_SIZE. recvSize: {}",
+                recvSize);
+            return;
+        }
+
+        if (!recvBuffer.AppendBuffer(pBuffer, recvSize))
+        {
+            LOG_ERROR("OnRecv() AppendBuffer error.");
+            return;
+        }
+
+        for (;;)
+        {
+            if (!recvBuffer.IsAbleToGetPacket())
+                return;
+
+            if (!_s_packet_handler_manager.Handle(static_cast<TSession&>(*this), recvBuffer))
+            {
+                LOG_ERROR("OnRecv() HandlerPacket failed. packetNumber: {}",
+                    recvBuffer.GetPacketNo());
+                return;
+            }
         }
     }
 
 protected:
     SOCKET client_sock;
     SOCKADDR_IN clientAddr;
+
+    PacketBuffer recvBuffer;
+    PacketBuffer sendBuffer;
 };
 
 class ClientSession : public SessionBase<ClientSession>
