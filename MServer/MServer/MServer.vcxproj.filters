@@ -35,9 +35,6 @@
     <ClCompile Include="ClientSessionHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Shared\packet.pb.cc">
-      <Filter>protobuf</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkEngine.h">
@@ -69,9 +66,6 @@
     </ClInclude>
     <ClInclude Include="ClientSession.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Shared\packet.pb.h">
-      <Filter>protobuf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

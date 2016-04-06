@@ -13,7 +13,6 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-
 #define BUFSIZE 1024
 #define MAX_BUF_SIZE 65535
 
